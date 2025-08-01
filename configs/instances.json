@@ -1,1 +1,1 @@
-[{"name": "1", "ram": 3.0, "cpu": 2.0, "os": "win11", "storage": 4.0}]
+[{"name": "web-server-1", "ram": 2.0, "cpu": 2.0, "os": "ubuntu", "storage": 50.0}, {"name": "web-server-2", "ram": 2.0, "cpu": 2.0, "os": "win11", "storage": 60.0}]
