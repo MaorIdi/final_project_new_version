@@ -24,53 +24,53 @@ logging.basicConfig(
 logger = logging.getLogger(Path(__file__).name)
 
 
+while flag:
+    vm_name = input("Enter the name of the virtual machine: ")
+    cpu = input("Enter the number of CPUs: ")
+    memory = input("Enter the amount of memory: ")
+    disk = input("Enter the size of the disk: ")
+    os = input("Enter the operating system: ")
 
-vm_name = input("Enter the name of the virtual machine: ")
-cpu = input("Enter the number of CPUs: ")
-memory = input("Enter the amount of memory: ")
-disk = input("Enter the size of the disk: ")
-os = input("Enter the operating system: ")
-
-
-
-try:
-    
-    vms = []
-    
-    
-    vm = VirtualMachine(
-        name= vm_name,
-        ram= memory,
-        cpu= cpu,
-        os= os,
-        storage= disk
-    ) 
 
 
     try:
-        with open(config_file, 'r') as f:
-            data = json.load(f)
+        
+        vms = []
+        
+        
+        vm = VirtualMachine(
+            name= vm_name,
+            ram= memory,
+            cpu= cpu,
+            os= os,
+            storage= disk
+        ) 
+
+
+        try:
+            with open(config_file, 'r') as f:
+                data = json.load(f)
+                
+        except (FileNotFoundError, json.decoder.JSONDecodeError) as e:
+            with open(config_file, 'w') as f:
+                json.dump([], f)
+
             
-    except (FileNotFoundError, json.decoder.JSONDecodeError) as e:
+        vms.append(dict(vm))
+        
         with open(config_file, 'w') as f:
-            json.dump([], f)
-
+            json.dump(vms, f)
         
-    vms.append(dict(vm))
-    
-    with open(config_file, 'w') as f:
-        json.dump(vms, f)
-       
-    logger.info(f"created vm: {vm} successfully") 
-    
-except ValidationError as e:        
-    for error in e.errors():
-        field = error['loc'][0]
-
-        if field == 'os':
-            error['msg'] = "Invalid operating system format. Please use a valid OS name."
+        logger.info(f"created vm: {vm} successfully") 
         
-        logger.info(f"'{field}': {error['msg']}")
+    except ValidationError as e:        
+        for error in e.errors():
+            field = error['loc'][0]
 
-except Exception as e:
-    logger.error(f'An error occured: {e}')
+            if field == 'os':
+                error['msg'] = "Invalid operating system format. Please use a valid OS name."
+            
+            logger.info(f"'{field}': {error['msg']}")
+
+    except Exception as e:
+        logger.error(f'An error occured: {e}')
