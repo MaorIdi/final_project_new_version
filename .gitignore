@@ -135,7 +135,7 @@ logs/
 
 # Configuration files that may contain sensitive data
 # Comment out the next line if you want to track configuration files
-# configs/
+configs/
 
 # IDE and Editor files
 .vscode/
