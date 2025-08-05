@@ -1,8 +1,9 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
+
 
 class VirtualMachine(BaseModel):
     name: str
     ram: float
-    cpu: float 
+    cpu: float
     storage: float
-    os: str 
+    os: str

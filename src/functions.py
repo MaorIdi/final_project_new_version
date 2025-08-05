@@ -1,6 +1,7 @@
 import json
 from machine import VirtualMachine
 
+
 def get_vm_details():
     vm_name = input("Enter the name of the virtual machine: ").strip()
     cpu = input("Enter the number of CPUs: ").strip()
@@ -8,6 +9,7 @@ def get_vm_details():
     disk = input("Enter the size of the disk: ").strip()
     os = input("Enter the operating system (windows/linux): ").strip().lower()
     return vm_name, cpu, memory, disk, os
+
 
 def validate_vm_details(vm_name, cpu, memory, disk, os):
     errors = []
@@ -34,21 +36,20 @@ def validate_vm_details(vm_name, cpu, memory, disk, os):
     elif int(disk) <= 0:
         errors.append("Disk size must be greater than 0.")
 
-    valid_os = {'windows', 'linux', 'win', 'lin', 'w', 'l'}
+    valid_os = {"windows", "linux", "win", "lin", "w", "l"}
     if not os:
         errors.append("Operating system is required.")
     elif os not in valid_os:
-        errors.append("OS name must be one of: 'windows', 'linux', 'win', 'lin', 'w', or 'l'.")
+        errors.append(
+            "OS name must be one of: 'windows', 'linux', 'win', 'lin', 'w', or 'l'."
+        )
 
     return errors
 
 
-
 def ask_user_for_flag(msg):
-    flag = (
-    input(msg).strip().lower() == "y"
-    )
-    return flag 
+    flag = input(msg).strip().lower() == "y"
+    return flag
 
 
 def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
@@ -58,7 +59,7 @@ def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
     try:
         with open(config_file, "r") as f:
             data = json.load(f)
-            if vm.name in [machine['name'] for machine in data]:
+            if vm.name in [machine["name"] for machine in data]:
                 raise ValueError("A machine with that name already exists!")
     except (FileNotFoundError, json.decoder.JSONDecodeError):
         with open(config_file, "w") as f:
