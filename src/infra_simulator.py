@@ -65,7 +65,24 @@ if install_nginx_flag:
         data = json.load(f)
         for machine in data:
             try:
-                subprocess.run(["bash", str(nginx_script), machine["name"]], check=True)
-                logger.info(f"Successfully installed nginx on {machine['name']}")
+                result = subprocess.run(
+                    ["bash", str(nginx_script), machine["name"]],
+                    capture_output=True,
+                    text=True,
+                    check=True,
+                )
+                if result.stdout:
+                    logger.info(
+                        f"nginx installation output for {machine['name']}: {result.stdout.strip()}"
+                    )
+                if result.stderr:
+                    logger.warning(
+                        f"nginx installation warnings for {machine['name']}: {result.stderr.strip()}"
+                    )
             except subprocess.CalledProcessError as e:
-                logger.error(f"Failed to install nginx on '{machine['name']}': {e}")
+                if e.stderr:
+                    logger.error(
+                        f"nginx installation failed for '{machine['name']}': {e.stderr.strip()}"
+                    )
+                else:
+                    logger.error(str(e))
