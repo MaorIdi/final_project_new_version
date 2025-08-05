@@ -72,13 +72,16 @@ if install_nginx_flag:
                     check=True,
                 )
                 if result.stdout:
-                    logger.info(f"{result.stdout.strip()}")
+                    for line in result.stdout.strip().split("\n"):
+                        logger.info(line)
                 if result.stderr:
-                    logger.warning(f"{result.stderr.strip()}")
+                    for line in result.stderr.strip().split("\n"):
+                        logger.warning(f"'{machine['name']}': {line}")
             except subprocess.CalledProcessError as e:
                 if e.stderr:
-                    logger.error(
-                        f"nginx installation failed for '{machine['name']}': {e.stderr.strip()}"
-                    )
+                    for line in e.stderr.strip().split("\n"):
+                        logger.error(
+                            f"nginx installation failed for '{machine['name']}': {line}"
+                        )
                 else:
                     logger.error(str(e))
