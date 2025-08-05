@@ -72,13 +72,9 @@ if install_nginx_flag:
                     check=True,
                 )
                 if result.stdout:
-                    logger.info(
-                        f"nginx installation output for {machine['name']}: {result.stdout.strip()}"
-                    )
+                    logger.info(f"{result.stdout.strip()}")
                 if result.stderr:
-                    logger.warning(
-                        f"nginx installation warnings for {machine['name']}: {result.stderr.strip()}"
-                    )
+                    logger.warning(f"{result.stderr.strip()}")
             except subprocess.CalledProcessError as e:
                 if e.stderr:
                     logger.error(
