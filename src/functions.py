@@ -38,7 +38,7 @@ def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
         disk_float = None
 
     if errors:
-        raise ValueError(" | ".join(errors))
+        raise ValueError(" \n ".join(errors))
 
     vm = VirtualMachine(
         name=vm_name, ram=memory_float, cpu=cpu_float, storage=disk_float, os=os
