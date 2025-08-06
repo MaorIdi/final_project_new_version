@@ -16,10 +16,10 @@ A Python-based virtual machine provisioning and management simulator that allows
 
 ```
 project_new_version/
-├── configs/
-│   └── instances.json          # VM configuration storage
-├── logs/
-│   └── provisioning.log        # Application logs
+├── configs/                    # VM configuration storage (created at runtime)
+│   └── instances.json
+├── logs/                       # Application logs (created at runtime)
+│   └── provisioning.log
 ├── scripts/
 │   └── install_nginx.sh        # Nginx installation script
 ├── src/
@@ -29,6 +29,7 @@ project_new_version/
 │   └── __pycache__/           # Python bytecode cache
 ├── venv/                       # Python virtual environment
 ├── .gitignore                  # Git ignore rules
+├── requirements.txt            # Python dependencies
 └── README.md                   # Project documentation
 ```
 
@@ -113,6 +114,15 @@ set LOG_OUTPUT=file && python src/infra_simulator.py
    ```
 
 3. **Install required dependencies:**
+
+   **Option 1 - Using requirements.txt (recommended):**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   **Option 2 - Manual installation:**
+
    ```bash
    pip install pydantic
    ```
@@ -165,12 +175,13 @@ Enter the amount of memory: 4
 Enter the size of the disk: 20
 Enter the operating system (windows/linux): linux
 
-2025-08-04 10:30:15 - INFO - infra_simulator.py - created vm: name='web-server-01' ram=4.0 cpu=2.0 storage=20.0 os='linux' successfully
+2025-08-04 10:30:15 - INFO - infra_simulator.py - created vm: name='web-server-01' ram=4.0 cpu=2.0 storage=20.0 os='linux' successfully.
 
 Do you want to create another virtual machine? (y/n): n
 Would you like to install nginx on all machine instances? (y/n): y
 
-2025-08-04 10:30:20 - INFO - infra_simulator.py - Successfully installed nginx on web-server-01
+2025-08-04 10:30:20 - INFO - infra_simulator.py - Installing nginx on web-server-01...
+2025-08-04 10:30:22 - INFO - infra_simulator.py - Installation successful on web-server-01.
 ```
 
 ## 📊 Data Models
@@ -241,8 +252,8 @@ The application implements comprehensive logging with:
 ### Log Format
 
 ```
-2025-08-04 10:30:15 - INFO - infra_simulator.py - created vm: web-server-01 successfully
-2025-08-04 10:30:20 - ERROR - infra_simulator.py - Failed to install nginx on web-server-01: Command failed
+2025-08-04 10:30:15 - INFO - infra_simulator.py - created vm: web-server-01 successfully.
+2025-08-04 10:30:20 - ERROR - infra_simulator.py - An error occurred while creating the virtual machine: Command failed
 ```
 
 ## 🖥️ Supported Operating Systems
@@ -262,12 +273,16 @@ Bash script for automated nginx installation on VM instances:
 
 ```bash
 #!/bin/bash
-# This script installs nginx on a machine instance based on its name.
+#
+#   This script is installing nginx on a machine isntance based on its name.
+#
 
 vm_name=$1
 
 if [[ ! -z $vm_name ]]; then
-    sleep 2  # Simulated installation process
+    echo "Installing nginx on $vm_name..."
+    sleep 2
+    echo "Installation successful on $vm_name."
 else
     echo "Please pass vm_name as an argument."
     exit 1
@@ -296,6 +311,12 @@ The application includes robust error handling for:
    - Run with appropriate privileges if needed
 
 2. **Missing Dependencies:**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+   Or manually:
 
    ```bash
    pip install pydantic
@@ -331,17 +352,6 @@ The application includes robust error handling for:
 - Include appropriate error handling
 - Update tests for new features
 - Maintain backward compatibility
-
-## 🔮 Future Enhancements
-
-- [ ] Web-based dashboard for VM management
-- [ ] Support for additional operating systems
-- [ ] VM resource monitoring and alerts
-- [ ] Automated backup and snapshot functionality
-- [ ] Integration with cloud providers (AWS, Azure, GCP)
-- [ ] Docker container support
-- [ ] REST API for programmatic access
-- [ ] VM templates and cloning capabilities
 
 ## ‍💻 Author
 
