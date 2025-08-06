@@ -17,20 +17,28 @@ def ask_user_for_flag(msg):
 
 
 def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
+    errors = []
+
     try:
         cpu_float = float(cpu)
     except ValueError:
-        raise ValueError(f"CPU value '{cpu}' must be a valid number.")
+        errors.append(f"CPU value '{cpu}' must be a valid number.")
+        cpu_float = None
 
     try:
         memory_float = float(memory)
     except ValueError:
-        raise ValueError(f"Memory value '{memory}' must be a valid number.")
+        errors.append(f"Memory value '{memory}' must be a valid number.")
+        memory_float = None
 
     try:
         disk_float = float(disk)
     except ValueError:
-        raise ValueError(f"Disk value '{disk}' must be a valid number.")
+        errors.append(f"Disk value '{disk}' must be a valid number.")
+        disk_float = None
+
+    if errors:
+        raise ValueError(" | ".join(errors))
 
     vm = VirtualMachine(
         name=vm_name, ram=memory_float, cpu=cpu_float, storage=disk_float, os=os
