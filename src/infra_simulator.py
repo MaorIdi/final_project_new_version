@@ -3,9 +3,9 @@ import os
 from pathlib import Path
 import json
 import subprocess
+from pydantic import ValidationError
 from functions import (
     get_vm_details,
-    validate_vm_details,
     ask_user_for_flag,
     create_virtual_machine,
 )
@@ -42,12 +42,6 @@ flag = ask_user_for_flag("Do you want to create a new virtual machine? (y/n): ")
 
 while flag:
     vm_name, cpu, memory, disk, os = get_vm_details()
-    errors = validate_vm_details(vm_name, cpu, memory, disk, os)
-    if errors:
-        for error in errors:
-            logger.warning(error)
-        flag = ask_user_for_flag("Do you want to create a new virtual machine? (y/n): ")
-        continue
 
     if os == "win" or os == "w":
         os = "windows"
@@ -58,6 +52,16 @@ while flag:
         vm = create_virtual_machine(vm_name, cpu, memory, disk, os, config_file)
         logger.info(f"created vm: {str(vm)} successfully.")
 
+    except ValidationError as e:
+        logger.warning("Validation errors occurred:")
+        for error in e.errors():
+            field = error["loc"][0] if error["loc"] else "unknown"
+            message = error["msg"]
+            logger.warning(f"{field}: {message}")
+        flag = ask_user_for_flag(
+            "Do you want to try creating a virtual machine again? (y/n): "
+        )
+        continue
     except ValueError as e:
         logger.warning(f"There was a problem with your input: {e}. Please try again.")
     except Exception as e:
