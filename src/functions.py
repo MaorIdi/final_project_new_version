@@ -18,27 +18,28 @@ def ask_user_for_flag(msg):
 
 def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
     errors = []
+    cpu_float = memory_float = disk_float = None
 
     try:
         cpu_float = float(cpu)
     except ValueError:
-        errors.append(f"CPU value '{cpu}' must be a valid number.")
-        cpu_float = None
+        errors.append(f"CPU: '{cpu}' is not a valid number")
 
     try:
         memory_float = float(memory)
     except ValueError:
-        errors.append(f"Memory value '{memory}' must be a valid number.")
-        memory_float = None
+        errors.append(f"Memory: '{memory}' is not a valid number")
 
     try:
         disk_float = float(disk)
     except ValueError:
-        errors.append(f"Disk value '{disk}' must be a valid number.")
-        disk_float = None
+        errors.append(f"Disk: '{disk}' is not a valid number")
 
     if errors:
-        raise ValueError(" \n ".join(errors))
+        error_message = "Validation errors found:\n" + "\n".join(
+            f"- {error}" for error in errors
+        )
+        raise ValueError(error_message)
 
     vm = VirtualMachine(
         name=vm_name, ram=memory_float, cpu=cpu_float, storage=disk_float, os=os
