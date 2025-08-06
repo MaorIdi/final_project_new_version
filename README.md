@@ -38,6 +38,55 @@ project_new_version/
 - **pydantic** library for data validation
 - **bash** (for nginx installation script execution)
 
+## ⚙️ Environment Variables
+
+The application supports the following environment variables for configuration:
+
+### `LOG_OUTPUT`
+
+Controls where log messages are output. Accepts the following values:
+
+- `both` (default): Logs to both console and file
+- `console`: Logs only to console/terminal
+- `file`: Logs only to the log file (`logs/provisioning.log`)
+
+**Usage examples:**
+
+```bash
+# Log to both console and file (default behavior)
+python infra_simulator.py
+
+# Log only to console
+LOG_OUTPUT=console python infra_simulator.py
+
+# Log only to file
+LOG_OUTPUT=file python infra_simulator.py
+```
+
+**Windows PowerShell:**
+
+```powershell
+# Log only to console
+$env:LOG_OUTPUT="console"; python src/infra_simulator.py
+
+# Log only to file
+$env:LOG_OUTPUT="file"; python src/infra_simulator.py
+
+# Set permanently for current session
+$env:LOG_OUTPUT="console"
+python src/infra_simulator.py
+```
+
+**Windows Command Prompt:**
+
+```cmd
+# Log only to console
+set LOG_OUTPUT=console && python src/infra_simulator.py
+
+# Log only to file
+set LOG_OUTPUT=file && python src/infra_simulator.py
+```
+
 ## 📦 Installation
 
 1. **Clone the repository:**

@@ -1,4 +1,5 @@
 import logging
+import os
 from pathlib import Path
 import json
 import subprocess
@@ -17,11 +18,22 @@ config_file = (Path(__file__).parent / "../configs/instances.json").resolve()
 config_file.parent.mkdir(parents=True, exist_ok=True)
 
 
+log_output = os.getenv("LOG_OUTPUT", "both").lower()
+
+handlers = []
+if log_output in ["console", "both"]:
+    handlers.append(logging.StreamHandler())
+if log_output in ["file", "both"]:
+    handlers.append(logging.FileHandler(log_file))
+
+if not handlers:
+    handlers = [logging.FileHandler(log_file), logging.StreamHandler()]
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(levelname)s - %(name)s - %(message)s",
     datefmt="%Y-%m-%d %H:%M:%S",
-    handlers=[logging.FileHandler(log_file), logging.StreamHandler()],
+    handlers=handlers,
 )
 logger = logging.getLogger(Path(__file__).name)
 
@@ -44,7 +56,7 @@ while flag:
 
     try:
         vm = create_virtual_machine(vm_name, cpu, memory, disk, os, config_file)
-        logger.info(f"created vm: {str(vm)} successfully")
+        logger.info(f"created vm: {str(vm)} successfully.")
 
     except ValueError as e:
         logger.warning(f"There was a problem with your input: {e}. Please try again.")
