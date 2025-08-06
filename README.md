@@ -294,22 +294,10 @@ The application includes robust error handling for:
 - [ ] REST API for programmatic access
 - [ ] VM templates and cloning capabilities
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
+## ‍💻 Author
 
 **Maor Idi** - [@MaorIdi](https://github.com/MaorIdi)
 
-## 📞 Support
-
-For support, issues, or feature requests, please:
-
-1. Check the [Issues](https://github.com/MaorIdi/final_project_new_version/issues) page
-2. Create a new issue with detailed description
-3. Include logs and system information for bug reports
-
 ---
 
-_Last updated: August 4, 2025_
+_Last updated: August 6, 2025_
