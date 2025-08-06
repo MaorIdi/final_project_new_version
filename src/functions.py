@@ -1,8 +1,5 @@
 import json
-import logging
 from machine import VirtualMachine
-
-logger = logging.getLogger(__name__)
 
 
 def get_vm_details():
@@ -14,45 +11,49 @@ def get_vm_details():
     return vm_name, cpu, memory, disk, os
 
 
+def validate_vm_details(vm_name, cpu, memory, disk, os):
+    errors = []
+    if not vm_name:
+        errors.append("VM name is required.")
+    if not cpu:
+        errors.append("CPU count is required.")
+    elif not cpu.isdigit():
+        errors.append("CPU count must be a positive number.")
+    elif int(cpu) <= 0:
+        errors.append("CPU count must be greater than 0.")
+
+    if not memory:
+        errors.append("Memory amount is required.")
+    elif not memory.isdigit():
+        errors.append("Memory must be a positive number.")
+    elif int(memory) <= 0:
+        errors.append("Memory must be greater than 0.")
+
+    if not disk:
+        errors.append("Disk size is required.")
+    elif not disk.isdigit():
+        errors.append("Disk size must be a positive number.")
+    elif int(disk) <= 0:
+        errors.append("Disk size must be greater than 0.")
+
+    valid_os = {"windows", "linux", "win", "lin", "w", "l"}
+    if not os:
+        errors.append("Operating system is required.")
+    elif os not in valid_os:
+        errors.append(
+            "OS name must be one of: 'windows', 'linux', 'win', 'lin', 'w', or 'l'."
+        )
+
+    return errors
+
+
 def ask_user_for_flag(msg):
     flag = input(msg).strip().lower() == "y"
     return flag
 
 
 def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
-    errors = []
-    cpu_float = memory_float = disk_float = None
-
-    try:
-        cpu_float = float(cpu)
-    except ValueError:
-        error_msg = f"CPU: '{cpu}' is not a valid number"
-        logger.error(error_msg)
-        errors.append(error_msg)
-
-    try:
-        memory_float = float(memory)
-    except ValueError:
-        error_msg = f"Memory: '{memory}' is not a valid number"
-        logger.error(error_msg)
-        errors.append(error_msg)
-
-    try:
-        disk_float = float(disk)
-    except ValueError:
-        error_msg = f"Disk: '{disk}' is not a valid number"
-        logger.error(error_msg)
-        errors.append(error_msg)
-
-    if errors:
-        for error in errors:
-            logger.warning(error)
-            # raise ValueError(error_message)
-
-    vm = VirtualMachine(
-        name=vm_name, ram=memory_float, cpu=cpu_float, storage=disk_float, os=os
-    )
-
+    vm = VirtualMachine(name=vm_name, ram=memory, cpu=cpu, os=os, storage=disk)
     if " " in vm.name:
         vm.name = vm.name.replace(" ", "-")
     try:
@@ -64,7 +65,6 @@ def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
         with open(config_file, "w") as f:
             json.dump([], f)
         data = []
-
     vms = data.copy()
     vms.append(dict(vm))
     with open(config_file, "w") as f:
