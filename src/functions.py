@@ -2,7 +2,6 @@ import json
 import logging
 from machine import VirtualMachine
 
-# Set up logger
 logger = logging.getLogger(__name__)
 
 
@@ -24,7 +23,6 @@ def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
     errors = []
     cpu_float = memory_float = disk_float = None
 
-    # Validate CPU
     try:
         cpu_float = float(cpu)
     except ValueError:
@@ -32,7 +30,6 @@ def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
         logger.error(error_msg)
         errors.append(error_msg)
 
-    # Validate Memory
     try:
         memory_float = float(memory)
     except ValueError:
@@ -40,7 +37,6 @@ def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
         logger.error(error_msg)
         errors.append(error_msg)
 
-    # Validate Disk
     try:
         disk_float = float(disk)
     except ValueError:
@@ -48,12 +44,10 @@ def create_virtual_machine(vm_name, cpu, memory, disk, os, config_file):
         logger.error(error_msg)
         errors.append(error_msg)
 
-    # If there are validation errors, raise them all at once
     if errors:
-        error_message = "Validation errors found:\n" + "\n".join(
-            f"- {error}" for error in errors
-        )
-        raise ValueError(error_message)
+        for error in errors:
+            logger.warning(error)
+            # raise ValueError(error_message)
 
     vm = VirtualMachine(
         name=vm_name, ram=memory_float, cpu=cpu_float, storage=disk_float, os=os
