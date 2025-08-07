@@ -1,137 +1,56 @@
-# Infrastructure Simulator
+# Virtual Machine Infrastructure Simulator
 
-A Python-based virtual machine provisioning and management simulator that allows users to create, configure, and manage virtual machine instances with automated service installation capabilities.
+A Python-based infrastructure simulator that allows you to create and manage virtual machine configurations with automated nginx installation capabilities.
 
-## 🚀 Features
+## Features
 
-- **Interactive VM Creation**: Create virtual machines with custom specifications through an intuitive command-line interface
-- **Input Validation**: Comprehensive validation for VM parameters including CPU, memory, disk, and operating system
-- **Configuration Management**: Persistent storage of VM configurations in JSON format
-- **Automated Service Installation**: Install nginx on all created VM instances with a single command
-- **Comprehensive Logging**: Detailed logging system for tracking operations and troubleshooting
-- **Cross-Platform Support**: Supports both Windows and Linux virtual machines
-- **Duplicate Prevention**: Prevents creation of VMs with duplicate names
+- 🖥️ **Virtual Machine Creation**: Create virtual machines with customizable CPU, memory, storage, and OS specifications
+- 📝 **Configuration Management**: Persistent storage of VM configurations in JSON format
+- 🔧 **Automated nginx Installation**: Batch installation of nginx on all created VM instances
+- 📋 **Input Validation**: Robust validation using Pydantic models
+- 📊 **Comprehensive Logging**: Detailed logging with configurable output (console, file, or both)
+- 🛡️ **Error Handling**: Graceful error handling and user-friendly error messages
 
-## 📁 Project Structure
+## Project Structure
 
 ```
-project_new_version/
-├── configs/                    # VM configuration storage (created at runtime)
-│   └── instances.json
-├── logs/                       # Application logs (created at runtime)
-│   └── provisioning.log
+final_project_new_version/
+├── configs/
+│   └── instances.json          # VM configurations storage
+├── logs/
+│   └── provisioning.log        # Application logs
 ├── scripts/
-│   └── install_nginx.sh        # Nginx installation script
+│   └── install_nginx.sh        # nginx installation script
 ├── src/
+│   ├── functions.py            # Core functionality functions
 │   ├── infra_simulator.py      # Main application entry point
-│   ├── functions.py            # Core utility functions
-│   ├── machine.py              # VirtualMachine data model
-│   └── __pycache__/           # Python bytecode cache
-├── venv/                       # Python virtual environment
-├── .gitignore                  # Git ignore rules
-├── requirements.txt            # Python dependencies
-└── README.md                   # Project documentation
+│   └── machine.py              # VirtualMachine model definition
+└── requirements.txt            # Python dependencies
 ```
 
-## 🛠️ Prerequisites
+## Requirements
 
-- **Python 3.7+** (Recommended: Python 3.8 or higher)
-- **pydantic** library for data validation
-- **bash** (for nginx installation script execution)
+- Python 3.7+
+- Bash shell (for nginx installation script)
 
-## ⚙️ Environment Variables
-
-The application supports the following environment variables for configuration:
-
-### `LOG_OUTPUT`
-
-Controls where log messages are output. Accepts the following values:
-
-- `both` (default): Logs to both console and file
-- `console`: Logs only to console/terminal
-- `file`: Logs only to the log file (`logs/provisioning.log`)
-
-**Usage examples:**
-
-```bash
-# Log to both console and file (default behavior)
-python infra_simulator.py
-
-# Log only to console
-LOG_OUTPUT=console python infra_simulator.py
-
-# Log only to file
-LOG_OUTPUT=file python infra_simulator.py
-```
-
-**Windows PowerShell:**
-
-```powershell
-# Log only to console
-$env:LOG_OUTPUT="console"; python src/infra_simulator.py
-
-# Log only to file
-$env:LOG_OUTPUT="file"; python src/infra_simulator.py
-
-# Set permanently for current session
-$env:LOG_OUTPUT="console"
-python src/infra_simulator.py
-```
-
-**Windows Command Prompt:**
-
-```cmd
-# Log only to console
-set LOG_OUTPUT=console && python src/infra_simulator.py
-
-# Log only to file
-set LOG_OUTPUT=file && python src/infra_simulator.py
-```
-
-## 📦 Installation
+## Installation
 
 1. **Clone the repository:**
-
    ```bash
-   git clone https://github.com/MaorIdi/final_project_new_version.git
-   cd project_new_version
+   git clone <repository-url>
+   cd final_project_new_version
    ```
 
-2. **Create and activate a virtual environment:**
-
-   ```bash
-   # Windows (PowerShell)
-   python -m venv venv
-   .\venv\Scripts\Activate.ps1
-
-   # Windows (Command Prompt)
-   python -m venv venv
-   venv\Scripts\activate.bat
-
-   # Linux/macOS
-   python3 -m venv venv
-   source venv/bin/activate
-   ```
-
-3. **Install required dependencies:**
-
-   **Option 1 - Using requirements.txt (recommended):**
-
+2. **Install dependencies:**
    ```bash
    pip install -r requirements.txt
    ```
 
-   **Option 2 - Manual installation:**
-
-   ```bash
-   pip install pydantic
-   ```
-
-## 🎯 Usage
+## Usage
 
 ### Running the Application
 
-Navigate to the project directory and run the main simulator:
+Navigate to the `src` directory and run the main simulator:
 
 ```bash
 cd src
@@ -140,223 +59,114 @@ python infra_simulator.py
 
 ### Interactive Workflow
 
-1. **VM Creation Process:**
+The application provides an interactive command-line interface:
 
-   - The application will prompt you to create a new virtual machine
-   - Enter the required specifications:
-     - VM Name (unique identifier)
-     - CPU count (positive integer)
-     - Memory amount (positive integer, in GB)
-     - Disk size (positive integer, in GB)
-     - Operating System (windows/linux or abbreviated forms)
+1. **Create Virtual Machines:**
+   - Enter VM name, CPU count, memory (GB), storage (GB), and operating system
+   - Supported OS options: `windows`, `win`, `w`, `linux`, `lin`, `l`
+   - Continue creating multiple VMs as needed
 
-2. **Input Validation:**
+2. **nginx Installation:**
+   - Option to install nginx on all created VM instances
+   - Automated execution across all configured machines
 
-   - All inputs are validated for correctness
-   - Invalid inputs will display warnings and prompt for re-entry
-   - Duplicate VM names are prevented
+### Configuration
 
-3. **Multiple VM Creation:**
+#### Environment Variables
 
-   - After creating a VM, you can choose to create additional machines
-   - Each VM is stored in the configuration file
+- `LOG_OUTPUT`: Controls logging output destination
+  - `console`: Log to console only
+  - `file`: Log to file only  
+  - `both`: Log to both console and file (default)
 
-4. **Service Installation:**
-   - Option to automatically install nginx on all created VM instances
-   - Uses the included bash script for installation
+#### Example Usage
 
-### Example Usage Session
+```bash
+# Log only to console
+LOG_OUTPUT=console python infra_simulator.py
 
-```
-Do you want to create a new virtual machine? (y/n): y
-Enter the name of the virtual machine: web-server-01
-Enter the number of CPUs: 2
-Enter the amount of memory: 4
-Enter the size of the disk: 20
-Enter the operating system (windows/linux): linux
-
-2025-08-04 10:30:15 - INFO - infra_simulator.py - created vm: name='web-server-01' ram=4.0 cpu=2.0 storage=20.0 os='linux' successfully.
-
-Do you want to create another virtual machine? (y/n): n
-Would you like to install nginx on all machine instances? (y/n): y
-
-2025-08-04 10:30:20 - INFO - infra_simulator.py - Installing nginx on web-server-01...
-2025-08-04 10:30:22 - INFO - infra_simulator.py - Installation successful on web-server-01.
+# Log only to file
+LOG_OUTPUT=file python infra_simulator.py
 ```
 
-## 📊 Data Models
+## Virtual Machine Specifications
 
-### VirtualMachine Class
-
-The `VirtualMachine` class uses Pydantic for data validation:
-
-```python
-class VirtualMachine(BaseModel):
-    name: str        # Unique VM identifier
-    ram: float       # Memory in GB
-    cpu: float       # Number of CPU cores
-    storage: float   # Disk size in GB
-    os: str         # Operating system (windows/linux)
-```
-
-### Configuration Storage
-
-VM configurations are stored in `configs/instances.json`:
-
-```json
-[
-  {
-    "name": "web-server-01",
-    "ram": 4.0,
-    "cpu": 2.0,
-    "storage": 20.0,
-    "os": "linux"
-  },
-  {
-    "name": "db-server",
-    "ram": 8.0,
-    "cpu": 4.0,
-    "storage": 100.0,
-    "os": "windows"
-  }
-]
-```
-
-## 🔧 Core Functions
-
-### `get_vm_details()`
-
-Collects VM specifications from user input through interactive prompts.
-
-### `validate_vm_details(vm_name, cpu, memory, disk, os)`
-
-Validates all VM parameters and returns a list of validation errors if any exist.
-
-### `create_virtual_machine(vm_name, cpu, memory, disk, os, config_file)`
-
-Creates a new VirtualMachine instance and persists it to the configuration file.
-
-### `ask_user_for_flag(message)`
-
-Utility function for yes/no user prompts, returns boolean based on user input.
-
-## 📝 Logging
-
-The application implements comprehensive logging with:
-
-- **File Logging**: All operations logged to `logs/provisioning.log`
-- **Console Output**: Real-time logging to terminal
-- **Structured Format**: Timestamp, log level, module name, and message
-- **Log Levels**: INFO for successful operations, WARNING for validation issues, ERROR for failures
-
-### Log Format
-
-```
-2025-08-04 10:30:15 - INFO - infra_simulator.py - created vm: web-server-01 successfully.
-2025-08-04 10:30:20 - ERROR - infra_simulator.py - An error occurred while creating the virtual machine: Command failed
-```
-
-## 🖥️ Supported Operating Systems
-
-The simulator supports the following OS inputs (case-insensitive):
-
+### Supported Operating Systems
 - **Windows**: `windows`, `win`, `w`
 - **Linux**: `linux`, `lin`, `l`
 
-All abbreviated forms are automatically expanded to full names during processing.
+### Resource Requirements
+- **CPU**: Must be greater than 0
+- **Memory**: Must be greater than 0 (GB)
+- **Storage**: Must be greater than 0 (GB)
 
-## 🔨 Scripts
-
-### `install_nginx.sh`
-
-Bash script for automated nginx installation on VM instances:
-
-```bash
-#!/bin/bash
-#
-#   This script is installing nginx on a machine isntance based on its name.
-#
-
-vm_name=$1
-
-if [[ ! -z $vm_name ]]; then
-    echo "Installing nginx on $vm_name..."
-    sleep 2
-    echo "Installation successful on $vm_name."
-else
-    echo "Please pass vm_name as an argument."
-    exit 1
-fi
+### Example VM Configuration
+```json
+{
+  "name": "web-server-01",
+  "memory": 4.0,
+  "cpu": 2.0,
+  "storage": 50.0,
+  "os": "linux"
+}
 ```
 
-**Usage:** The script is automatically called by the main application when nginx installation is requested.
+## File Descriptions
 
-## 🚨 Error Handling
+### Core Files
 
-The application includes robust error handling for:
+- **`src/infra_simulator.py`**: Main application entry point with user interaction loop
+- **`src/machine.py`**: Pydantic model for VirtualMachine with validation rules
+- **`src/functions.py`**: Core utility functions for VM creation and user input handling
 
-- **File I/O Operations**: Handles missing configuration files gracefully
-- **JSON Parsing**: Creates new configuration files if corrupted
-- **Subprocess Execution**: Catches and logs nginx installation failures
-- **Input Validation**: Comprehensive parameter validation with user-friendly error messages
-- **Duplicate Names**: Prevents VM name conflicts
+### Configuration Files
 
-## 🔍 Troubleshooting
+- **`configs/instances.json`**: Persistent storage for VM configurations
+- **`logs/provisioning.log`**: Application logs and error tracking
 
-### Common Issues
+### Scripts
 
-1. **Permission Errors:**
+- **`scripts/install_nginx.sh`**: Bash script for simulating nginx installation on VMs
 
-   - Ensure write permissions for `configs/` and `logs/` directories
-   - Run with appropriate privileges if needed
+## Error Handling
 
-2. **Missing Dependencies:**
+The application includes comprehensive error handling for:
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+- **Validation Errors**: Invalid VM specifications (CPU, memory, storage values)
+- **Duplicate Names**: Prevents creation of VMs with existing names
+- **File System Errors**: Handles missing or corrupted configuration files
+- **Process Execution**: Manages nginx installation script failures
 
-   Or manually:
+## Logging
 
-   ```bash
-   pip install pydantic
-   ```
+Detailed logging includes:
 
-3. **Bash Script Execution Issues:**
+- VM creation success/failure
+- Validation errors with specific field information
+- nginx installation progress and errors
+- System-level errors and warnings
 
-   - Ensure bash is available in your system PATH
-   - On Windows, consider using Git Bash or WSL
+Log format: `YYYY-MM-DD HH:MM:SS - LEVEL - MODULE - MESSAGE`
 
-4. **JSON Configuration Corruption:**
-   - Delete `configs/instances.json` to reset configuration
-   - The application will create a new file automatically
+## Dependencies
 
-### Debugging
+- **pydantic**: Data validation and settings management
+- **annotated-types**: Type annotations support
+- **typing-extensions**: Extended typing support
 
-- Check `logs/provisioning.log` for detailed operation history
-- Enable verbose logging by modifying the logging level in `infra_simulator.py`
-- Verify VM configurations in `configs/instances.json`
-
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📋 Development Guidelines
 
-- Follow PEP 8 coding standards
-- Add comprehensive docstrings to new functions
-- Include appropriate error handling
-- Update tests for new features
-- Maintain backward compatibility
+## Support
 
-## ‍💻 Author
-
-**Maor Idi** - [@MaorIdi](https://github.com/MaorIdi)
+For questions or issues, please open an issue in the GitHub repository or contact the development team.
 
 ---
 
-_Last updated: August 6, 2025_
+**Note**: This is a simulation tool for educational and development purposes. No actual virtual machines are created or managed.
